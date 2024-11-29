@@ -1,9 +1,12 @@
-all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm
+all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis
 
 clean: 
-	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon
+	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis
 
-CFLAGS = -D MAT_SIZE=128 -D TILE_SIZE=64
+MAT_SIZE ?= 1024
+TILE_SIZE ?= 128
+
+CFLAGS = -D MAT_SIZE=$(MAT_SIZE) -D TILE_SIZE=$(TILE_SIZE)
 
 simple_mult:
 	gcc $(CFLAGS) -o mat_mult simple_mm.c
@@ -22,3 +25,6 @@ open_mp:
 
 neon_mm:
 	gcc $(CFLAGS) -o neon neon.c
+
+blis:
+	gcc $(CFLAGS) -o blis blis_mm.c -lblis -lm -O3

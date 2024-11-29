@@ -1,9 +1,6 @@
 #include<stdlib.h>
 #include<blis/blis.h>
-
-
 #include <time.h>
-//#include <sys/cachectl.h>
 
 #ifndef MAT_SIZE
 #define MAT_SIZE 500
@@ -14,32 +11,26 @@
 #define K MAT_SIZE
 #define C2 MAT_SIZE
 
-/**now to initialise this in a c file**/ 
 
 
 int main(){
 
-	//int m , k, n;
+	//Initialize BLIS
+	bli_init();
+
+	//dim_t m , k, n;
 
 	float* A = (float*)malloc(M * K * sizeof(float));
 	float* B = (float*)malloc(K * N * sizeof(float));
-	float* C = (float*)malloc(M * N * sizeof(float));
+	float* C = (float*)calloc(M * N,  sizeof(float));
 
 	
+	printf("reached here");
 
 	__builtin___clear_cache;	
-	//int **m1 = (int**)malloc(R1 * sizeof(int *));
-	//for (int i = 0; i < R1; i++){
-	//	m1[i] = (int* )malloc (C1 * sizeof(int));
-	//}
-
-	//int **m2 = (int**)malloc(R2 * sizeof(int *));
-	//for (int j = 0; j < R2; j++){
-	//	m2[j] = (int* )malloc (C2 * sizeof(int));
-	//}
 
 	srand(time(NULL));	
-	
+/**
 	for(int o = 0; o < M; o++){
 		for(int n = 0; n < K; n++){
 			A[o * K + n] = rand();
@@ -58,14 +49,41 @@ int main(){
 			C[p * N + q] = 0;
 		}
 	}
+**/
+	if (!A || !B || !C) {
+        	fprintf(stderr, "Memory allocation failed\n");
+        	exit(EXIT_FAILURE);
+    	}
 
-	float alpha = 0.1f, beta = 0.0f;
+    	// Input elements of A
+    	//printf("Enter elements of matrix A (%lu x %lu):\n", m, k);
+    	for (int i = 0; i < M * K; i++) {
+        	A[i] = rand();
+    	}
+
+    	// Input elements of B
+    	//printf("Enter elements of matrix B (%lu x %lu):\n", k, n);
+    	for (int i = 0; i < K * N; i++) {
+        	B[i] = rand();
+    	}
 	
-	bli_sgemm(BLIS_NO_TRANSPOSE, BLIS_NO_TRANSPOSE, BLIS_NO_TRANSPOSE,M, N, K, &alpha, A, K, B, N, &beta, C,N);
+	float alpha = 1.0f, beta = 0.0f;
+
+
+	obj_t A_blis, B_blis, C_blis;
+	bli_obj_create_with_attached_buffer(BLIS_FLOAT, M, K, A, 1, K, &A_blis);
+	bli_obj_create_with_attached_buffer(BLIS_FLOAT, K, N, B, 1, N, &B_blis);
+	bli_obj_create_with_attached_buffer(BLIS_FLOAT, M, N, C, 1, N, &C_blis);
+	
+	printf("now here");
+
+	bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
 
 	free(A);
 	free(B);
 	free(C);
+
+	bli_finalize();
 
 	return 0;
 }
