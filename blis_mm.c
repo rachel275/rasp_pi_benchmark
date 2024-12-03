@@ -23,33 +23,13 @@ int main(){
 	float* A = (float*)malloc(M * K * sizeof(float));
 	float* B = (float*)malloc(K * N * sizeof(float));
 	float* C = (float*)calloc(M * N,  sizeof(float));
-
 	
-	printf("reached here");
+//	printf("reached here");
 
 	__builtin___clear_cache;	
 
 	srand(time(NULL));	
-/**
-	for(int o = 0; o < M; o++){
-		for(int n = 0; n < K; n++){
-			A[o * K + n] = rand();
-		} 
-	}
 
-	for(int p = 0; p < K; p++){
-		for(int q = 0; q < N; q++){
-			B[p * N + q] = rand();
-		}
-	}
-
-
-	for(int p = 0; p < M; p++){
-		for(int q = 0; q < N; q++){
-			C[p * N + q] = 0;
-		}
-	}
-**/
 	if (!A || !B || !C) {
         	fprintf(stderr, "Memory allocation failed\n");
         	exit(EXIT_FAILURE);
@@ -69,15 +49,20 @@ int main(){
 	
 	float alpha = 1.0f, beta = 0.0f;
 
-
 	obj_t A_blis, B_blis, C_blis;
 	bli_obj_create_with_attached_buffer(BLIS_FLOAT, M, K, A, 1, K, &A_blis);
 	bli_obj_create_with_attached_buffer(BLIS_FLOAT, K, N, B, 1, N, &B_blis);
 	bli_obj_create_with_attached_buffer(BLIS_FLOAT, M, N, C, 1, N, &C_blis);
 	
-	printf("now here");
+//	printf("now here");
+
+//	bli_printm("A_blis: ", &A_blis, "%4.1f", "");
 
 	bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
+	
+	bli_obj_free(&A_blis);
+	bli_obj_free(&B_blis);
+	bli_obj_free(&C_blis);
 
 	free(A);
 	free(B);
