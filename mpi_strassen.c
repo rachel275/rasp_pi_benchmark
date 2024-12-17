@@ -2,6 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
+
+#ifndef MAT_SIZE
+#define MAT_SIZE 1024
+#endif
+
+#define N MAT_SIZE
+#define C1 MAT_SIZE
+#define R2 MAT_SIZE
+#define C2 MAT_SIZE
 
 void print(int n, int** mat)
 {
@@ -149,12 +159,12 @@ int main(int argc, char* argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &p_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &num_process);
 
-    int n;
-    if (p_rank == 0)
-    {
-        printf("\nEnter the dimensions of the matrix: ");
-        scanf("%d", &n);
-    }
+    int n = N;
+    //if (p_rank == 0)
+    //{
+    //    printf("\nEnter the dimensions of the matrix: ");
+    //    scanf("%d", &n);
+    //}
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -170,17 +180,17 @@ int main(int argc, char* argv[])
     MPI_Bcast(&(mat1[0][0]), n * n, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Bcast(&(mat2[0][0]), n * n, MPI_INT, 0, MPI_COMM_WORLD);
 
-    double startTime = MPI_Wtime();
+    //double startTime = MPI_Wtime();
 
     int** prod;
     strassen(n, mat1, mat2, prod, p_rank);
 
-    double endTime = MPI_Wtime();
+    //double endTime = MPI_Wtime();
 
-    if (p_rank == 0)
-    {
-        printf("\nParallel Strassen Runtime (MPI): %.5f\n\n", endTime - startTime);
-    }
+    //if (p_rank == 0)
+    //{
+    //    printf("\nParallel Strassen Runtime (MPI): %.5f\n\n", endTime - startTime);
+    //}
 
     MPI_Finalize();
 
