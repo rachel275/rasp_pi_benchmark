@@ -2,6 +2,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+#ifndef MAT_SIZE
+#define MAT_SIZE 1024
+#endif
+
+#define N MAT_SIZE
+#define C1 MAT_SIZE
+#define R2 MAT_SIZE
+#define C2 MAT_SIZE
+#define LENGTH MAT_SIZE
+
+
 void matrix_addition(float64x2_t* C, float64x2_t* A, float64x2_t* B, int n) {
     for (int i = 0; i < n * n; ++i) {
         C[i] = vaddq_f64(A[i], B[i]);
@@ -101,25 +113,27 @@ void strassen(float64x2_t* C, float64x2_t* A, float64x2_t* B, int n) {
 }
 
 int main() {
-    int n = 4; // Size of the matrix (must be power of 2)
+    int n = N; // Size of the matrix (must be power of 2)
     int size = n * n;
     float64x2_t *A = (float64x2_t*)malloc(sizeof(float64x2_t) * size);
     float64x2_t *B = (float64x2_t*)malloc(sizeof(float64x2_t) * size);
     float64x2_t *C = (float64x2_t*)malloc(sizeof(float64x2_t) * size);
+	
 
+    __builtin___clear_cache;
     for (int i = 0; i < size; i++) {
         A[i] = vdupq_n_f64(i + 1);
         B[i] = vdupq_n_f64(i + 2);
     }
 
     strassen(C, A, B, n);
-
+    /**
     for (int i = 0; i < size; i++) {
         double result[2];
         vst1q_f64(result, C[i]);
         printf("C[%d]: %lf %lf\n", i, result[0], result[1]);
     }
-
+    **/
     free(A);
     free(B);
     free(C);
