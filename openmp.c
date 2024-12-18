@@ -26,12 +26,12 @@
 
 #define min(x,y) (((x)<(y))?(x):(y))
 
-int A[N][N];
-int B[N][N];
-int C_naive[N][N];
-int C_block[N][N];
-int vectorA[MAX_DIM];
-int vectorB[MAX_DIM];
+double A[N][N];
+double B[N][N];
+double C_naive[N][N];
+double C_block[N][N];
+double vectorA[MAX_DIM];
+double vectorB[MAX_DIM];
 
 
 /*void display(int x[N][N]) {
@@ -61,46 +61,36 @@ void naiveMultiplication(int dim) {
 	#pragma omp parallel for
     	for (i = 0; i < dim; i++) {
         	for (j = 0; j < dim; j++) {
-			C_naive[i][j] = 0;
-            		for (k = 0; k < dim; k++) {
-                		C_naive[i][j] += A[i][k] * B[k][j];
-            		}
+			C_naive[i][j] = 0.0;
+            	for (k = 0; k < dim; k++) {
+                	C_naive[i][j] += A[i][k] * B[k][j];
+            	}
         	}
 	}
-
-    //gettimeofday(&tv2, &tz);
-    //elapsed = (double) (tv2.tv_sec-tv1.tv_sec) + (double) (tv2.tv_usec-tv1.tv_usec) * 1.e-6;
-    //printf("Naive Elapsed time = %f seconds.\n", elapsed);
-//display(C_naive);
 }
 
 
 void blockMultiplication(int dim) {
-	int i,j,k,bs,ii,jj,kk,sum;
+	int i,j,k,bs,ii,jj,kk;
+	double sum;
 	struct timeval tv1, tv2;
     struct timezone tz;
 	double elapsed; 
-	bs = TILE_SIZE;
+	bs = TILESIZE;
 	
 	convert(dim);
 	
-	//gettimeofday(&tv1, &tz);
-
 	#pragma omp parallel for private(i, j, k, ii, jj, kk, sum) shared(C_block) schedule(static)
 	for(ii = 0; ii < dim; ii += bs)
 		for(jj = 0; jj < dim; jj += bs)
 			for(kk = 0; kk < dim; kk += bs)
 				for(i = ii; i < min(dim, ii+bs); i++)
 					for(j = jj; j < min(dim, jj+bs); j++) {
-						sum = 0;
+						sum = 0.0;
 						for(k = kk; k < min(dim, kk+bs); k++)
 							sum += vectorA[i * dim + k] * vectorB[j * dim + k];
 						C_block[i][j] = sum;
 					}
-    //gettimeofday(&tv2, &tz);
-    //elapsed = (double) (tv2.tv_sec-tv1.tv_sec) + (double) (tv2.tv_usec-tv1.tv_usec) * 1.e-6;
-    //printf("Block Parallel Elapsed time = %f seconds.\n", elapsed);
-	//display(C_block);
 }
 
 
@@ -111,20 +101,13 @@ int main(int argc,char*argv[])
     for (i= 0; i< N; i++)
         for (j= 0; j< N; j++)
 		{
-           A[i][j] = rand();
-		   B[i][j] = rand();
+           A[i][j] = ((double)rand() / RAND_MAX) * 100.0;
+		   B[i][j] = ((double)rand() / RAND_MAX) * 100.0;
 		}
 		
-	omp_set_num_threads(4);//omp_get_num_procs());
+	omp_set_num_threads(4);
 	
-	//for(int nThread = 1; nThread <=2; nThread++) {
-		//printf("Number of Threads: %d \n",nThread);
-		//omp_set_num_threads(nThread);
-
-		//naiveMultiplication(N);
-	naiveMultiplication(N);	
-	//blockMultiplication(N);
-		
-		//printf("\n");
-	//}
+	naiveMultiplication(N);
+	
+	return 0;
 }
