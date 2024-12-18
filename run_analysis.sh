@@ -16,7 +16,7 @@ if [ ! -f "$OUTPUT_FILE" ]; then
 fi
 
 # List of binaries to profile
-BINARIES=("mat_mult" "mat_mult_inter" "mat_mult_tiles" "mat_mult_tile_edge" "openmp" "neon" "blis")
+BINARIES=("mat_mult" "mat_mult_inter" "mat_mult_tiles" "mat_mult_tile_edge" "openmp" "neon" "blis" "para_blis" "strassen" "neon_strassen" "pthread_neon_strassen" "mpi_strassen")
 
 # Loop through matrix and tile sizes
 for MAT_SIZE in "${MAT_SIZES[@]}"; do

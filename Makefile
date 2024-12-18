@@ -1,9 +1,9 @@
-all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen
+all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas
 
 clean: 
-	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen
+	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas
 
-MAT_SIZE ?= 512
+MAT_SIZE ?= 2048
 TILE_SIZE ?= 128
 
 CFLAGS = -D MAT_SIZE=$(MAT_SIZE) -D TILE_SIZE=$(TILE_SIZE)
@@ -41,6 +41,10 @@ pthread_neon_strassen:
 blis:
 	gcc $(CFLAGS) -o blis blis_mm.c -lblis -lm -O3
 
+para_blis:
+	gcc $(CFLAGS) -o para_blis para_blis_mm.c -lblis -lm -O3
+
 open_blas:
 
 atlas:
+	gcc $(CFLAGS) -o atlas atlas_mm.c -latlas -lcblas -llapack
