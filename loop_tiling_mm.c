@@ -15,17 +15,18 @@
 #define R2 MAT_SIZE
 #define C2 MAT_SIZE
 #define n MAT_SIZE
-void multiplyMatrix(int** a, int** b){
+
+void multiplyMatrix(double** a, double** b){
 	
-	int **c = (int**)malloc(R1 * sizeof(int *));
+	double **c = (double**)malloc(R1 * sizeof(double *));
 	for (int i = 0; i < R1; i++){
-		c[i] = (int* )malloc (C2 * sizeof(int));
+		c[i] = (double* )malloc (C2 * sizeof(double));
 	}
 	
 	/** initialise matrix c**/
 	for (int i = 0; i < R1; i++) {
 		for (int j = 0; j < C2; j++){
-			c[i][j] = 0;
+			c[i][j] = 0.0;
 		}
 	}
 	
@@ -44,7 +45,7 @@ void multiplyMatrix(int** a, int** b){
 				for (int i = ii; i < ii + TILESIZE; i++) {
 					for (int k = kk; k < kk + TILESIZE; k++) {
 						for (int j = jj; j < jj + TILESIZE; j++) {
-							c[i][j] = c[i][j] + a[i][k] * b[k][j];
+							c[i][j] += a[i][k] * b[k][j];
 						}
 					}
 				}
@@ -55,39 +56,28 @@ void multiplyMatrix(int** a, int** b){
 
 int main()
 {
-	//int m1[R1][C1] = {{1, 1}, {2, 2}};
-	
-//	int m2[R2][C2] = {{1, 1, 1}, {2, 2, 2}};
-
-
-//	int m1[R1][C1];
-//	int m2[R2][C2];
-
-//	srand(time(NULL));
-
 	__builtin___clear_cache;
-	int **m1 = (int**)malloc(R1 * sizeof(int *));
+	double **m1 = (double**)malloc(R1 * sizeof(double *));
 	for (int i = 0; i < R1; i++){
-		m1[i] = (int* )malloc (C1 * sizeof(int));
+		m1[i] = (double* )malloc (C1 * sizeof(double));
 	}
 	
-	int **m2 = (int**)malloc(R2 * sizeof(int *));
+	double **m2 = (double**)malloc(R2 * sizeof(double *));
 	for (int j = 0; j < R1; j++){
-		m2[j] = (int* )malloc (C2 * sizeof(int));
+		m2[j] = (double* )malloc (C2 * sizeof(double));
 	}
 	for(int o = 0; o < R1; o++){
 		for(int i = 0; i < C1; i++){
-			m1[o][i] = rand();
+			m1[o][i] = ((double)rand() / RAND_MAX) * 100.0;
 		} 
 	}
 
 	for(int p = 0; p < R2; p++){
 		for(int q = 0; q < C2; q++){
-			m2[p][q] = rand();
+			m2[p][q] = ((double)rand() / RAND_MAX) * 100.0;
 		}
 	}
-	//printf("Reached here \n");
-			
+	
 	multiplyMatrix(m1, m2);
 	
 	return 0;

@@ -13,59 +13,46 @@
 #define R2 MAT_SIZE
 #define C2 MAT_SIZE
 
-void print(int n, int** mat)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            printf("%d ", mat[i][j]);
+void print(int n, double** mat) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%f ", mat[i][j]);
         }
         printf("\n");
     }
     printf("\n");
 }
 
-int** allocateMatrix(int n)
-{
-    int* data = (int*)malloc(n * n * sizeof(int));
-    int** array = (int**)malloc(n * sizeof(int*));
-    for (int i = 0; i < n; i++)
-    {
+double** allocateMatrix(int n) {
+    double* data = (double*)malloc(n * n * sizeof(double));
+    double** array = (double**)malloc(n * sizeof(double*));
+    for (int i = 0; i < n; i++) {
         array[i] = &(data[n * i]);
     }
     return array;
 }
 
-void fillMatrix(int n, int** mat)
-{
+void fillMatrix(int n, double** mat) {
     srand(time(NULL));
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            mat[i][j] = rand() % 5;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            mat[i][j] = (double)rand() / RAND_MAX;
         }
     }
 }
 
-void freeMatrix(int n, int** mat)
-{
+void freeMatrix(int n, double** mat) {
     free(mat[0]);
     free(mat);
 }
 
-int** naive(int n, int** mat1, int** mat2)
-{
-    int** prod = allocateMatrix(n);
+double** naive(int n, double** mat1, double** mat2) {
+    double** prod = allocateMatrix(n);
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            prod[i][j] = 0;
-            for (int k = 0; k < n; k++)
-            {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            prod[i][j] = 0.0;
+            for (int k = 0; k < n; k++) {
                 prod[i][j] += mat1[i][k] * mat2[k][j];
             }
         }
@@ -74,27 +61,21 @@ int** naive(int n, int** mat1, int** mat2)
     return prod;
 }
 
-int** getSlice(int n, int** mat, int offseti, int offsetj)
-{
+double** getSlice(int n, double** mat, int offseti, int offsetj) {
     int m = n / 2;
-    int** slice = allocateMatrix(m);
-    for (int i = 0; i < m; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
+    double** slice = allocateMatrix(m);
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < m; j++) {
             slice[i][j] = mat[offseti + i][offsetj + j];
         }
     }
     return slice;
 }
 
-int** addMatrices(int n, int** mat1, int** mat2, int add)
-{
-    int** result = allocateMatrix(n);
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+double** addMatrices(int n, double** mat1, double** mat2, int add) {
+    double** result = allocateMatrix(n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             if (add)
                 result[i][j] = mat1[i][j] + mat2[i][j];
             else
@@ -104,15 +85,12 @@ int** addMatrices(int n, int** mat1, int** mat2, int add)
     return result;
 }
 
-int** combineMatrices(int m, int** c11, int** c12, int** c21, int** c22)
-{
+double** combineMatrices(int m, double** c11, double** c12, double** c21, double** c22) {
     int n = 2 * m;
-    int** result = allocateMatrix(n);
+    double** result = allocateMatrix(n);
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             if (i < m && j < m)
                 result[i][j] = c11[i][j];
             else if (i < m)
@@ -126,18 +104,14 @@ int** combineMatrices(int m, int** c11, int** c12, int** c21, int** c22)
     return result;
 }
 
-void strassen(int n, int** mat1, int** mat2, int** prod, int rank)
-{
+void strassen(int n, double** mat1, double** mat2, double** prod, int rank) {
     // Implementation of Strassen's algorithm using MPI
     // Similar to the logic you provided, with proper C syntax
 }
 
-bool check(int n, int** prod1, int** prod2)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
+bool check(int n, double** prod1, double** prod2) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             if (prod1[i][j] != prod2[i][j])
                 return false;
         }
@@ -145,13 +119,11 @@ bool check(int n, int** prod1, int** prod2)
     return true;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     int p_rank;
     int num_process;
 
-    if (MPI_Init(&argc, &argv) != MPI_SUCCESS)
-    {
+    if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
         printf("MPI-INIT Failed\n");
         return 0;
     }
@@ -160,37 +132,22 @@ int main(int argc, char* argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_process);
 
     int n = N;
-    //if (p_rank == 0)
-    //{
-    //    printf("\nEnter the dimensions of the matrix: ");
-    //    scanf("%d", &n);
-    //}
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(&n, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    int** mat1 = allocateMatrix(n);
-    int** mat2 = allocateMatrix(n);
+    double** mat1 = allocateMatrix(n);
+    double** mat2 = allocateMatrix(n);
 
-    if (p_rank == 0)
-    {
+    if (p_rank == 0) {
         fillMatrix(n, mat1);
         fillMatrix(n, mat2);
     }
 
-    MPI_Bcast(&(mat1[0][0]), n * n, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Bcast(&(mat2[0][0]), n * n, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(mat1[0][0]), n * n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&(mat2[0][0]), n * n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    //double startTime = MPI_Wtime();
-
-    int** prod;
+    double** prod;
     strassen(n, mat1, mat2, prod, p_rank);
-
-    //double endTime = MPI_Wtime();
-
-    //if (p_rank == 0)
-    //{
-    //    printf("\nParallel Strassen Runtime (MPI): %.5f\n\n", endTime - startTime);
-    //}
 
     MPI_Finalize();
 
