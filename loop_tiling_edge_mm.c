@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
 #ifndef TILESIZE
 #define TILESIZE 5
 #endif
@@ -19,14 +18,14 @@
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
-void multiplyMatrix(int m1[][C1], int m2[][C2]){
+void multiplyMatrix(double m1[][C1], double m2[][C2]){
 	
-	int result[R1][C2];
+	double result[R1][C2];
 	
 	/** initialise matrix c**/
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++){
-			result[i][j] = 0;
+			result[i][j] = 0.0;
 		}
 	}
 	
@@ -39,11 +38,11 @@ void multiplyMatrix(int m1[][C1], int m2[][C2]){
 						int j_end = jj + TILESIZE;
 						if (j_end <= n) {
 							for (int j = jj; j < j_end; j++) {
-								result[i][j] = result[i][j] + m1[i][k] * m2[k][j];
+								result[i][j] += m1[i][k] * m2[k][j];
 							}
 						} else {
 							for (int j = jj; j < n; j++) {
-								result[i][j] = result[i][j] + m1[i][k] * m2[k][j];
+								result[i][j] += m1[i][k] * m2[k][j];
 							}
 						}
 					}
@@ -55,28 +54,23 @@ void multiplyMatrix(int m1[][C1], int m2[][C2]){
 
 int main()
 {
-//	int m1[R1][C1] = {{1, 1}, {2, 2}};
-	
-//	int m2[R2][C2] = {{1, 1, 1}, {2, 2, 2}};
-
-
-	int m1[R1][C1];
-	int m2[R2][C2];
+	double m1[R1][C1];
+	double m2[R2][C2];
 
 	srand(time(NULL));
 	for(int o = 0; o < R1; o++){
 		for(int i = 0; i < C1; i++){
-			m1[o][i] = rand();
+			m1[o][i] = ((double)rand() / RAND_MAX) * 100.0;
 		} 
 	}
 
 	for(int p = 0; p < R2; p++){
 		for(int q = 0; q < C2; q++){
-			m2[p][q] = rand();
+			m2[p][q] = ((double)rand() / RAND_MAX) * 100.0;
 		}
 	}
 	if (C1 != R2){
-		printf("The number of columns in Matrix-1 must be equal to the number of rows in Matrix-2");
+		printf("The number of columns in Matrix-1 must be equal to the number of rows in Matrix-2\n");
 		exit(EXIT_FAILURE);
 	}
 	
