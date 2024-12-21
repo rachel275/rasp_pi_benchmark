@@ -1,4 +1,4 @@
 # rasp_pi_benchmark
 This repo looks are matrix multiplication on the Raspberry Pi 5. We provide several implementations - from the naive baselines to popular libraries. We include versions that use Neon Instrinsics and SIMD to optimize the calculations for the raspberry pi. We also provide several implementations of Strassen's algorithm, for again the basic verion, one using neon intrinsics, and some parallel/recursive one. We write all of the CPU implementations in C. The size of the matrix (and tile size) is provided as a parameter for the compiler. Each version creates two random arrays of type double that is performs the matrix multiplication on. Currently we only benchmark dense, square matrices.
 
-In order to run the OpenBLAS, BLIS and ATLAS matrix multiplication the libraries will need to be installed for these beforehand. 
+In order to run the OpenBLAS, BLIS and ATLAS matrix multiplication the libraries will need to be installed for these beforehand. Similarly for the GPU code, the correct libraries are needed for the files to compile. 
