@@ -39,6 +39,7 @@ sudo apt install ninja-build cmake -y
 cd vulkan && mkdir build && cd build
 cmake -G "Ninja" -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
+(ninja clean)
 ```
 - **NOTE**: Before running the matmul in `bin`, we need to compile the shader
 
