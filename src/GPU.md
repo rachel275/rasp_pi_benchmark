@@ -20,9 +20,9 @@ g++ opengl.cpp -o opengl -lGL -lGLEW -lglfw
 - **N**: matrix size
 - Currently, **Maximum N** is 1024. For larger matrix sizes, we will need to adjust the window width/height
 
-- **Results (ms)**
-N = [16    32    64   128   256  512    1024]
-T = [0.66  0.61  0.7  1.71  9.5  71.75  570.0]
+- **Results (ms):** <br>
+N = [16    32    64   128   256  512    1024]<br>
+T = [0.66  0.61  0.7  1.7  9.5  71.7  570]
 
 ```bash
 python3 -m venv exp
