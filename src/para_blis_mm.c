@@ -1,14 +1,16 @@
 #include<stdlib.h>
-#include<blis/blis.h>
+#include<blis.h>
 #include <time.h>
 
-#ifndef MAT_SIZE
-#define MAT_SIZE 500
+#ifndef M_SIZE
+#define M 128
+#define K 128
+#define N 128
 #endif
 
-#define M MAT_SIZE
-#define N MAT_SIZE
-#define K MAT_SIZE
+#define M M_SIZE
+#define N N_SIZE
+#define K K_SIZE
 
 int main() {
 	// Initialize BLIS
@@ -17,7 +19,7 @@ int main() {
 	// Set the number of threads for BLIS
 	bli_thread_set_num_threads(4);
 	//bli_thread_set_thread_impl(BLIS_OPENMP);
-	bli_thread_set_ways(4, 1, 1, 1, 1);
+	bli_thread_set_ways(1, 1, 4, 1, 1);
     
 	double* A = (double*)malloc(M * K * sizeof(double));
 	double* B = (double*)malloc(K * N * sizeof(double));

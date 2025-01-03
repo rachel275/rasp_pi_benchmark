@@ -1,15 +1,17 @@
 #include<stdlib.h>
 #include<cblas.h>
 #include <time.h>
+#include <stdio.h>
 
-#ifndef MAT_SIZE
-#define MAT_SIZE 500
+#ifndef M_SIZE
+#define M 128
+#define K 128
+#define N 128
 #endif
 
-#define M MAT_SIZE
-#define N MAT_SIZE
-#define K MAT_SIZE
-#define C2 MAT_SIZE
+#define M M_SIZE
+#define N N_SIZE
+#define K K_SIZE
 
 
 
@@ -27,7 +29,7 @@ int main(){
 	srand(time(NULL));	
 
 	if (!A || !B || !C) {
-        	fprintf(stderr, "Memory allocation failed\n");
+//        	printf(stderr, "Memory allocation failed\n");
         	exit(EXIT_FAILURE);
     	}
 
@@ -45,7 +47,7 @@ int main(){
 	
 	//double alpha = 1.0, beta = 0.0;
 
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, K, N, M, 1.0, A, M, B, N, 0.0, C, N); 
+//	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, K, N, M, 1.0, A, M, B, N, 0.0, C, N); 
 	
 	free(A);
 	free(B);
