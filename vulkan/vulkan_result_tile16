@@ -1,0 +1,68 @@
+N = 16
+Computation time = 42012 ns
+Buffer write + GPU->host transfer time = 20783 ns
+
+N = 32
+Computation time = 390028 ns
+Buffer write + GPU->host transfer time = 19096 ns
+
+N = 64
+Computation time = 2817442 ns
+Buffer write + GPU->host transfer time = 21951 ns
+
+N = 128
+Computation time = 22164817 ns
+Buffer write + GPU->host transfer time = 32555 ns
+
+N = 256
+Computation time = 250113277 ns
+Buffer write + GPU->host transfer time = 82390 ns
+
+N = 512
+Computation time = 2324346378 ns
+Buffer write + GPU->host transfer time = 205909 ns
+
+N = 1024
+Computation time = 19031606298 ns
+Buffer write + GPU->host transfer time = 833473 ns
+
+N = 16
+Bufffer setup time = 1574 ns
+Computation time = 38630 ns
+Buffer write + GPU->host transfer time = 16981 ns
+
+N = 32
+Bufffer setup time = 1333 ns
+Computation time = 82870 ns
+Buffer write + GPU->host transfer time = 17333 ns
+
+N = 64
+Bufffer setup time = 1222 ns
+Computation time = 418756 ns
+Buffer write + GPU->host transfer time = 17833 ns
+
+N = 128
+Bufffer setup time = 1185 ns
+Computation time = 3010572 ns
+Buffer write + GPU->host transfer time = 26685 ns
+
+N = 256
+Bufffer setup time = 1222 ns
+Computation time = 22616859 ns
+Buffer write + GPU->host transfer time = 62018 ns
+
+N = 512
+Bufffer setup time = 1481 ns
+Computation time = 180682762 ns
+Buffer write + GPU->host transfer time = 201943 ns
+
+N = 768
+Bufffer setup time = 1149 ns
+Computation time = 609416845 ns
+Buffer write + GPU->host transfer time = 449608 ns
+
+N = 1024
+Bufffer setup time = 1759 ns
+Computation time = 1442924980 ns
+Buffer write + GPU->host transfer time = 853346 ns
+
