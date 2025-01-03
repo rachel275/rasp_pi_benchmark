@@ -48,3 +48,6 @@ open_blas:
 
 atlas:
 	gcc $(CFLAGS) -o atlas atlas_mm.c -latlas -lcblas -llapack
+
+opengl:
+	g++ opengl.cpp -o opengl -lGL -lGLEW -lglfw
