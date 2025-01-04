@@ -1,7 +1,7 @@
-all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas
+all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas opengl
 
 clean: 
-	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas
+	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas opengl
 
 M_SIZE ?= 128
 K_SIZE ?= 256
@@ -57,3 +57,8 @@ open_blas:
 
 atlas:
 	gcc $(OTHERFLAGS) -o atlas atlas_mm.c -I "/home/rachel/ATLAS/include" -L "/home/rachel/atlas-build/lib" -lcblas -latlas -lm
+
+opengl:
+	g++ opengl.cpp -o opengl -lGL -lGLEW -lglfw
+
+
