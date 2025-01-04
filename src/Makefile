@@ -1,12 +1,12 @@
-all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas opengl
+all: simple_mult loop_interchange_mm loop_tiling_mm open_mp neon_mm blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas #opengl
 
 clean: 
-	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas opengl
+	rm -f mat_mult mat_mult_inter mat_mult_loop mat_mult_tiles mat_mult_tile_edge openmp neon blis strassen mpi_strassen neon_strassen pthread_neon_strassen para_blis atlas # opengl
 
-M_SIZE ?= 128
-K_SIZE ?= 256
-N_SIZE ?= 128
-MAT_SIZE ?= 2048
+M_SIZE ?= 512
+K_SIZE ?= 1024
+N_SIZE ?= 1024
+MAT_SIZE ?= 1024
 TILE_SIZE ?= 128
 
 BLIS_PREFIX = /usr/local
@@ -48,7 +48,7 @@ pthread_neon_strassen:
 	gcc $(CFLAGS) -lpthread -o pthread_neon_strassen pthread_neon_strassen.c
 
 blis:
-#	gcc $(CFLAGS) -o blis blis_mm.c $(BLIS_LIB) -lblis -lm -O3
+	gcc $(OTHERFLAGS) -I$(BLIS_INC) -o blis blis_mm.c $(BLIS_LIB) -L/usr/local/lib -fopenmp -lm -O3
 
 para_blis:
 	gcc $(OTHERFLAGS) -I$(BLIS_INC) -o para_blis para_blis_mm.c $(BLIS_LIB) -L/usr/local/lib -fopenmp -lm -O3

@@ -2,27 +2,32 @@
 #include<blis/blis.h>
 #include <time.h>
 
-#ifndef MAT_SIZE
-#define MAT_SIZE 500
+
+
+#ifndef M_SIZE
+#define M 128
+#define K 128
+#define N 128
 #endif
 
-#define M MAT_SIZE
-#define N MAT_SIZE
-#define K MAT_SIZE
-#define C2 MAT_SIZE
-
+#define M M_SIZE
+#define N N_SIZE
+#define K K_SIZE
 
 int main(){
 
 	//Initialize BLIS
 	bli_init();
 
+	bli_thread_set_num_threads(1);
+	//bli_thread_set_thread_impl(BLIS_OPENMP);
+	bli_thread_set_ways(1, 1, 1, 1, 1);
+    
 	//dim_t m , k, n;
 
 	double* A = (double*)malloc(M * K * sizeof(double));
 	double* B = (double*)malloc(K * N * sizeof(double));
 	double* C = (double*)calloc(M * N,  sizeof(double));
-	
 //	printf("reached here");
 
 	__builtin___clear_cache;	
@@ -49,20 +54,20 @@ int main(){
 	double alpha = 1.0, beta = 0.0;
 
 	obj_t A_blis, B_blis, C_blis;
-	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, M, K, A, 1, K, &A_blis);
-	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, K, N, B, 1, N, &B_blis);
-	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, M, N, C, 1, N, &C_blis);
+	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, M, K, A, 1, M, &A_blis);
+	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, K, N, B, 1, K, &B_blis);
+	bli_obj_create_with_attached_buffer(BLIS_DOUBLE, M, N, C, 1, M, &C_blis);
 	
 //	printf("now here");
 
 //	bli_printm("A_blis: ", &A_blis, "%4.1f", "");
 
 	bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
-	
+/**	
 	bli_obj_free(&A_blis);
 	bli_obj_free(&B_blis);
 	bli_obj_free(&C_blis);
-
+**/
 	free(A);
 	free(B);
 	free(C);
