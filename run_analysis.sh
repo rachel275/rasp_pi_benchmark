@@ -1,12 +1,15 @@
 #!/bin/bash
 
+cd src
+
 # Clean and prepare for build
 make clean
 
 # Define matrix and tile sizes
-MAT_SIZES=(64 128 256 512 1024 2048 4096)
-TILE_SIZES=(4 8 16 32 64 128 256 512 1024 2048)
 
+M_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
+K_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
+N_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
 # Output CSV file
 OUTPUT_FILE="perf_results.csv"
 
@@ -16,20 +19,19 @@ if [ ! -f "$OUTPUT_FILE" ]; then
 fi
 
 # List of binaries to profile
-BINARIES=("mat_mult" "mat_mult_inter" "mat_mult_tiles" "mat_mult_tile_edge" "openmp" "neon" "blis" "para_blis" "strassen" "neon_strassen" "pthread_neon_strassen" "mpi_strassen")
+BINARIES=("atlas") #"pthread_neon_strassen")
 
 # Loop through matrix and tile sizes
-for MAT_SIZE in "${MAT_SIZES[@]}"; do
-    for TILE_SIZE in "${TILE_SIZES[@]}"; do
-        # Ensure tile size is less than or equal to matrix size
-        if [ "$TILE_SIZE" -le "$MAT_SIZE" ]; then
+for M in "${M_SIZE[@]}"; do
+    for K in "${K_SIZE[@]}"; do
+	for N in "${N_SIZE[@]}"; do
             # Clean and rebuild with current matrix and tile size
             make clean
-            make all MAT_SIZE="$MAT_SIZE" TILE_SIZE="$TILE_SIZE"
+            make all M_SIZE="$M" K_SIZE="$K" N_SIZE="$N"
 
             # Loop through binaries for profiling
             for BINARY in "${BINARIES[@]}"; do
-                echo "Profiling $BINARY for Matrix Size $MAT_SIZE and Tile Size $TILE_SIZE..."
+                echo "Profiling $BINARY for M = $M_SIZE K = $K_SIZE N= $N_SIZE..."
 
                 # Run perf command and save output to a temporary file
                 perf stat -B \
@@ -42,17 +44,17 @@ for MAT_SIZE in "${MAT_SIZES[@]}"; do
                 ELAPSED_TIME=$(grep "seconds time elapsed" perf_output.txt | awk '{print $1}')
 
                 # Log results to the CSV file
-                echo "$MAT_SIZE,$TILE_SIZE,$BINARY,$INSTRUCTIONS,$CACHE_MISSES,$ELAPSED_TIME" >> "$OUTPUT_FILE"
+                echo "$M,$K,$N,$BINARY,$INSTRUCTIONS,$CACHE_MISSES,$ELAPSED_TIME" >> "$OUTPUT_FILE"
 
                 # Remove temporary perf output file
                 rm perf_output.txt
             done
-        fi
+    	done
     done
 done
 
 # Final cleanup
 make clean
-
+mv $OUTPUT_FILE ../results/
 echo "Profiling completed. Results saved to $OUTPUT_FILE."
 
