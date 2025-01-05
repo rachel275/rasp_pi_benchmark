@@ -49,7 +49,7 @@ int main() {
 	
 	// Perform matrix multiplication using BLIS
 	bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
-
+/**
 	// Free allocated memory
 	free(A);
 	free(B);
@@ -57,6 +57,6 @@ int main() {
 
 	// Finalize BLIS
 	bli_finalize();
-
+**/
 	return 0;
 }

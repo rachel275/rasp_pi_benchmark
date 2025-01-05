@@ -7,11 +7,11 @@ make clean
 
 # Define matrix and tile sizes
 
-M_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
-K_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
-N_SIZE=(8 32 64 100 128 150 170 200 220 256 275 300 350 400 512)
+M_SIZE=(32 64 100 128 150 170 200 220 256 275 300 350 400)
+K_SIZE=(32 64 100 128 150 170 200 220 256 275 300 350 400)
+N_SIZE=(32 64 100 128 150 170 200 220 256 275 300 350 400)
 # Output CSV file
-OUTPUT_FILE="perf_blis_results.csv"
+OUTPUT_FILE="perf_para_results.csv"
 
 # Check if CSV file already exists; if not, create it with headers
 if [ ! -f "$OUTPUT_FILE" ]; then
@@ -19,7 +19,7 @@ if [ ! -f "$OUTPUT_FILE" ]; then
 fi
 
 # List of binaries to profile
-BINARIES=("blis") #"pthread_neon_strassen")
+BINARIES=("blis" "pool_blis" "pthread_blis" "para_blis") #"pthread_neon_strassen")
 
 # Loop through matrix and tile sizes
 for M in "${M_SIZE[@]}"; do

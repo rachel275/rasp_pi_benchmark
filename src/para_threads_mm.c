@@ -17,7 +17,7 @@
 #define K K_SIZE
 #define N N_SIZE
 #define THREAD_COUNT 4
-
+#define NUM_TASKS 8
 typedef struct {
     int thread_id;
     int core_id;  // Core to pin the thread
@@ -69,10 +69,10 @@ void* matrix_thread_func(void* arg) {
     bli_obj_create_with_attached_buffer(BLIS_DOUBLE, M, N, C, 1, M, &C_blis);
 
     // Perform matrix multiplication C = alpha * A * B + beta * C
-    //printf("Thread %d (core %d): Performing matrix multiplication...\n", thread_id, core_id);
+//    printf("Thread %d (core %d): Performing matrix multiplication...\n", thread_id, core_id);
     bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
 
-    bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
+    //bli_gemm(&BLIS_ONE, &A_blis, &B_blis, &BLIS_ZERO, &C_blis);
     //printf("Thread %d (core %d): Matrix multiplication completed.\n", thread_id, core_id);
 /**
     // Free memory
@@ -98,23 +98,26 @@ int main() {
         fprintf(stderr, "Warning: Only %d cores available. Adjusting thread count.\n", num_cores);
         return EXIT_FAILURE;
     }
+    int tasks_per_thread = NUM_TASKS / THREAD_COUNT;
 
-    // Create and start threads
     for (int i = 0; i < THREAD_COUNT; i++) {
-        thread_data[i].thread_id = i;
-        thread_data[i].core_id = i;  // Pin each thread to a unique core
-        if (pthread_create(&threads[i], NULL, matrix_thread_func, &thread_data[i]) != 0) {
-            fprintf(stderr, "Error creating thread %d\n", i);
-            exit(EXIT_FAILURE);
+        for (int j = 0; j < tasks_per_thread; j++) {
+            // int task_id = i * tasks_per_thread + j;
+            //thread_data_t* task_data = (thread_data_t*)malloc(sizeof(thread_data_t));
+            //task_data->task_id = task_id;
+
+            thread_data[i].thread_id = i;
+            thread_data[i].core_id = i;  // Pin each thread to a unique core
+            // Create a thread for each task
+            if (pthread_create(&threads[i], NULL, matrix_thread_func, &thread_data[i]) != 0) {
+                fprintf(stderr, "Error creating thread for task %d\n", i);
+                exit(EXIT_FAILURE);
+            }
+            pthread_join(threads[i], NULL);  // Join after task is done
         }
     }
 
-    // Join threads
-    for (int i = 0; i < THREAD_COUNT; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
-    //printf("All threads completed successfully.\n");
+//    printf("All tasks completed!\n");
     return 0;
 }
 
