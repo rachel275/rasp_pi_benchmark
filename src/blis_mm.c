@@ -2,8 +2,6 @@
 #include<blis/blis.h>
 #include <time.h>
 
-
-
 #ifndef M_SIZE
 #define M 128
 #define K 128
