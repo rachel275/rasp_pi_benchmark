@@ -1,7 +1,15 @@
+#include<linux/types.h>
+#include<librdtsc/rdtsc.h>
+#include<unistd.h>
 #include<stdlib.h>
+#include<stdint.h>
 #include<cblas.h>
 #include <time.h>
 #include <stdio.h>
+#include<sys/time.h>
+
+//typedef u64 uint64_t;
+//typedef s64 int64_t;
 
 #ifndef M_SIZE
 #define M 128
@@ -12,18 +20,13 @@
 #define M M_SIZE
 #define N N_SIZE
 #define K K_SIZE
-
-
-
 int main(){
 
-	
+	struct timeval start, end;
 	double* A = (double*)malloc(M * K * sizeof(double));
 	double* B = (double*)malloc(K * N * sizeof(double));
 	double* C = (double*)calloc(M * N,  sizeof(double));
 	
-//	printf("reached here");
-
 	__builtin___clear_cache;	
 
 	srand(time(NULL));	
@@ -46,12 +49,13 @@ int main(){
     	}
 	
 	//double alpha = 1.0, beta = 0.0;
+	gettimeofday(&start, NULL);
+	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, K, N, M, 1.0, A, M, B, N, 0.0, C, N); 
+	gettimeofday(&end, NULL);
 
-//	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, K, N, M, 1.0, A, M, B, N, 0.0, C, N); 
-	
-	free(A);
-	free(B);
-	free(C);
+	long seconds = end.tv_sec - start.tv_sec;
+        long microseconds = end.tv_usec - start.tv_usec;
+	printf("Elapsed time (us): %ld \n", (seconds * 1000000) + microseconds);
 
 	return 0;
 }

@@ -20,8 +20,8 @@ int main(){
 
 	//Initialize BLIS
 	//bli_init();
-	bli_thread_set_num_threads(1);
-	bli_thread_set_ways(1, 1, 1, 1, 1);
+	bli_thread_set_num_threads(2);
+	bli_thread_set_ways(1, 1, 2, 1, 1);
 	struct timeval start, end;
     
 	double* A = (double*)malloc(M * K * sizeof(double));
